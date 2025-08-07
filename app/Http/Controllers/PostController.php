@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Events\PostPublished;
+use App\Models\User;
 use App\Services\PostServices;
 use Illuminate\Http\Request;
+use Mail;
 
 class PostController extends Controller
 {
@@ -27,10 +30,26 @@ class PostController extends Controller
 
     public function store(Request $request){
 
-        $data =['title' => $request->title, 'description' => $request->content];
+        $data =['title' => $request->title, 'description' => $request->post('content')];
         // dd($data);
         // Create a new post using the repository
         $post = $this->postServices->createPost($data);
+        // dd($post->toArray());
+        // Notify Admin
+       
+
+        // Notify User for now limit to 1
+        // User::take(2)->get(); one can do this also
+        // $users = User::limit(8)->get();
+        // // dd($users);
+        // foreach ($users as $user) {
+        //     Mail::raw("New Post for user {$request->title}", function ($message) use ($user) {
+        //         $message->to($user->email)
+        //                 ->subject('New Post Created');
+        //     });
+        // }
+        PostPublished::dispatch($post);
+
         return redirect()->route('post.index')->with('success','Post Created Successfully');
     }
 
@@ -43,7 +62,7 @@ class PostController extends Controller
     }
 
     public function update(Request $request){
-        $data =['title'=> $request->title,'description'=> $request->content];
+        $data =['title'=> $request->title,'description'=> $request->post('content')];
         $id = (int)$request->id;
         // dd($id);
         $post = $this->postServices->updatePost($data,$id);
