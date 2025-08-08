@@ -21,7 +21,7 @@ Route::post('/destroy', [PostController::class,'destroy'])->name('post.destroy')
 // For Post Routes End
 
 // For User Routes Start
-Route::get('/user', [UserController::class,'index'])->name('user.index');
+Route::get('/user', [UserController::class,'index'])->name('user.index')->middleware('ensureTokenIsValid');
 // For User Routes End
 
 
