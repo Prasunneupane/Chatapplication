@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\MessageInterface;
+use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -17,7 +18,7 @@ class UserController extends Controller
 
     public function index()
     {
-
+        dd(Inspiring::quotes());
         $emailService = app(MessageInterface::class)->get('email');
         $smsService = app(MessageInterface::class)->get('sms');
         // dd($emailService);
